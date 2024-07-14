@@ -34,4 +34,26 @@ const createSong = async (song) => {
   }
 };
 
-module.exports = { getAllSongs, getSong, createSong };
+const deleteSong = async (id) => {
+  try {
+    const deletedBookmark = await db.one("DELETE FROM songs WHERE id = $[id] RETURNING *", {id});
+    return deletedBookmark;
+  }
+
+  catch (error) {
+    return error;
+  }
+};
+
+const updateSong = async (id, song) => {
+  try {
+    const updatedBookmark = await db.one("UPDATE songs SET name=$[song.name], artist=$[song.artist], album=$[song.album], time=$[song.time], is_favorite=$[song.is_favorite] WHERE id=$[id] RETURNING *", {id, song});
+    return updatedBookmark;
+  } 
+  
+  catch (error) {
+    return error;
+  }
+};
+
+module.exports = { getAllSongs, getSong, createSong, deleteSong, updateSong };
